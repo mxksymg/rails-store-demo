@@ -1,0 +1,41 @@
+<div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow">
+  <h1 class="text-2xl font-bold mb-4">Dane do zamówienia</h1>
+  <p class="text-gray-600 mb-4">Podaj adres i numer telefonu, aby złożyć zamówienie.</p>
+
+  <%= form_with model: @user, url: profile_path, method: :patch, local: true do |form| %>
+    <div class="mb-4">
+      <%= form.label :first_name, "Imię", class: "block font-medium" %>
+      <%= form.text_field :first_name, class: "w-full border rounded px-3 py-2" %>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :last_name, "Nazwisko", class: "block font-medium" %>
+      <%= form.text_field :last_name, class: "w-full border rounded px-3 py-2" %>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :street, "Ulica", class: "block font-medium" %>
+      <%= form.text_field :street, class: "w-full border rounded px-3 py-2" %>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :city, "Miasto", class: "block font-medium" %>
+      <%= form.text_field :city, class: "w-full border rounded px-3 py-2" %>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :postal_code, "Kod pocztowy", class: "block font-medium" %>
+      <%= form.text_field :postal_code, class: "w-full border rounded px-3 py-2" %>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :phone, "Numer telefonu", class: "block font-medium" %>
+      <%= form.telephone_field :phone, class: "w-full border rounded px-3 py-2" %>
+    </div>
+
+    <div class="flex gap-2">
+      <%= form.submit "Zapisz dane", class: "bg-indigo-600 text-white px-4 py-2 rounded" %>
+      <%= link_to "Anuluj", cart_path, class: "bg-gray-500 text-white px-4 py-2 rounded" %>
+    </div>
+  <% end %>
+</div>

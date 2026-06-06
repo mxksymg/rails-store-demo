@@ -1,0 +1,36 @@
+<div class="mb-6">
+  <% 
+    all_images = []
+    all_images << @product.cover_image if @product.cover_image.attached?
+    all_images += @product.images.to_a if @product.images.attached?
+  %>
+  <% if all_images.any? %>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <% all_images.each do |img| %>
+        <%= image_tag img, class: "w-full rounded-lg shadow-md" %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">Brak zdjęcia</div>
+  <% end %>
+</div>
+<div class="max-w-2xl mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold"><%= @product.name %></h1>
+  <p class="text-gray-600 mt-2"><%= @product.description %></p>
+  <p class="text-2xl font-bold text-indigo-600 mt-4"><%= number_to_currency(@product.price) %></p>
+<% if user_signed_in? %>
+  <% unless current_user.admin? %>
+    <div class="mt-6">
+      <% if current_user.favorite_products.include?(@product) %>
+        <%= button_to "Usuń z polubionych", product_favorite_path(@product), method: :delete, class: "bg-red-500 text-white px-4 py-2 rounded mt-2" %>
+      <% else %>
+        <%= button_to "Polub", product_favorite_path(@product), method: :post, class: "bg-green-500 text-white px-4 py-2 rounded mt-2" %>
+      <% end %>
+      <%= button_to "Dodaj do koszyka", add_cart_path(@product.id), method: :post, class: "bg-indigo-600 text-white px-4 py-2 rounded ml-2" %>
+    </div>
+  <% end %>
+<% else %>
+  <p><%= link_to "Zaloguj się", new_user_session_path %> aby móc polubić lub kupić produkt.</p>
+<% end %>
+<%= link_to "Powrót do listy", products_path, class: "mt-8 inline-block text-indigo-600 hover:underline" %>
+</div>

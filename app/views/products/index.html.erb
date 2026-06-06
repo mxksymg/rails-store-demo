@@ -1,0 +1,73 @@
+<style>
+  body > main {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+    max-width: 100% !important;
+  }
+  .container.mx-auto {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+    max-width: 100% !important;
+  }
+</style>
+
+<div class="flex flex-row w-full" style="min-height: calc(100vh - 60px);">
+  <!-- PASEK BOCZNY – PRZYLEGA DO LEWEJ KRAWĘDZI -->
+  <aside class="w-64 bg-white shadow-lg p-5 flex-shrink-0" style="height: auto;">
+    <h3 class="font-semibold text-lg mb-4 text-gray-800 border-b pb-2">Kategorie</h3>
+    <%= form_with url: products_path, method: :get, local: true, class: "space-y-3" do |form| %>
+      <% ["torby", "podkladki", "akcesoria"].each do |cat| %>
+        <label class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-1 rounded">
+          <%= check_box_tag "categories[#{cat}]", cat, params[:categories]&.include?(cat), class: "w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500" %>
+          <span class="text-gray-700 capitalize"><%= cat %></span>
+        </label>
+      <% end %>
+      <div class="pt-4 flex gap-3">
+        <%= form.submit "Filtruj", class: "flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition cursor-pointer" %>
+        <%= link_to "Resetuj", products_path, class: "flex-1 text-center bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition" %>
+      </div>
+    <% end %>
+  </aside>
+
+  <!-- LISTA PRODUKTÓW – ZAJMUJE RESZTĘ MIEJSCA -->
+  <div class="flex-1 p-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <% @products.each do |product| %>
+        <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition overflow-hidden flex flex-col">
+          <!-- ZDJĘCIE PRODUKTU (miniaturka) -->
+          <% if product.cover_image.attached? %>
+            <%= image_tag product.cover_image, class: "w-full h-48 object-cover" %>
+          <% elsif product.images.attached? && product.images.any? %>
+            <%= image_tag product.images.first, class: "w-full h-48 object-cover" %>
+          <% else %>
+            <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-400">Brak zdjęcia</div>
+          <% end %>
+          <div class="p-4">
+            <h2 class="text-xl font-semibold mb-2">
+              <%= link_to product.name, product_path(product), class: "text-indigo-600 hover:underline" %>
+            </h2>
+            <p class="text-gray-600 text-sm line-clamp-2"><%= truncate(product.description, length: 80) %></p>
+            <p class="text-2xl font-bold text-indigo-600 mt-3"><%= number_to_currency(product.price) %></p>
+
+            <div class="mt-4 flex flex-wrap gap-2">
+              <%= link_to "Pełny opis", product_path(product), class: "text-sm bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded transition" %>
+              <% if policy(product).edit? %>
+                <%= link_to 'Edytuj', edit_product_path(product), class: "text-sm bg-yellow-500 text-white px-2 py-1 rounded" %>
+              <% end %>
+              <% if policy(product).destroy? %>
+                <%= button_to 'Usuń', product_path(product), method: :delete, data: { turbo_confirm: 'Czy na pewno chcesz usunąć ten produkt?' }, class: "text-sm bg-red-500 text-white px-2 py-1 rounded" %>
+              <% end %>
+              <% if user_signed_in? && !current_user.admin? %>
+                <% if current_user.favorite_products.include?(product) %>
+                  <%= button_to "❤️ Usuń", product_favorite_path(product), method: :delete, class: "text-sm bg-red-600 text-white px-2 py-1 rounded" %>
+                <% else %>
+                  <%= button_to "🤍 Polub", product_favorite_path(product), method: :post, class: "text-sm bg-green-600 text-white px-2 py-1 rounded" %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

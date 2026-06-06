@@ -1,0 +1,22 @@
+pl:
+  errors:
+    format: "%{attribute} %{message}"
+    messages:
+      not_saved: "Nie udało się zapisać %{resource}:"
+  activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              taken: "został już wykorzystany"
+  devise:
+    registrations:
+      signed_up: "Witamy! Rejestracja zakończona sukcesem."
+      updated: "Konto zostało zaktualizowane."
+    sessions:
+      signed_in: "Zalogowano pomyślnie."
+      signed_out: "Wylogowano pomyślnie."
+    failure:
+      already_authenticated: "Jesteś już zalogowany."
+      unauthenticated: "Musisz się zalogować lub zarejestrować, aby kontynuować."

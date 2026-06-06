@@ -1,0 +1,17 @@
+<h1 class="text-2xl font-bold mb-4">Moje polubione produkty</h1>
+
+<% if @favorite_products.any? %>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @favorite_products.each do |product| %>
+      <div class="bg-white rounded-lg shadow-md p-4">
+        <h2 class="text-xl font-semibold"><%= product.name %></h2>
+        <p class="text-gray-600"><%= truncate(product.description, length: 80) %></p>
+        <p class="text-lg font-bold mt-2"><%= number_to_currency(product.price) %></p>
+        <%= link_to "Zobacz produkt", product_path(product), class: "text-indigo-600 hover:underline mt-2 inline-block" %>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p>Nie masz jeszcze żadnych polubionych produktów. 
+     <%= link_to "Przejdź do strony głównej", root_path, class: "text-indigo-600" %> i polub coś!</p>
+<% end %>

@@ -1,0 +1,45 @@
+<div class="max-w-2xl mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold">Nowy produkt</h1>
+  <%= form_with model: @product, local: true, multipart: true do |form| %>
+    <div class="mb-4">
+      <%= form.label :name, "Nazwa", class: "block font-medium" %>
+      <%= form.text_field :name, class: "w-full border rounded px-3 py-2" %>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :description, "Opis", class: "block font-medium" %>
+      <%= form.text_area :description, rows: 5, class: "w-full border rounded px-3 py-2" %>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :price, "Cena", class: "block font-medium" %>
+      <%= form.number_field :price, step: 0.01, class: "w-full border rounded px-3 py-2" %>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :published, "Opublikowany", class: "block font-medium" %>
+      <%= form.check_box :published, class: "mr-2" %>
+    </div>
+
+    <div class="flex gap-2">
+      <%= form.submit "Zapisz", class: "bg-indigo-600 text-white px-4 py-2 rounded" %>
+      <%= link_to "Anuluj", products_path, class: "bg-gray-500 text-white px-4 py-2 rounded" %>
+    </div>
+    <div class="mb-4">
+      <%= form.label :category, "Kategoria", class: "block font-medium" %>
+      <%= form.select :category, options_for_select([["Torby", "torby"], ["Podkladki", "podkladki"], ["Akcesoria", "akcesoria"]], @product.category), { include_blank: "Wybierz kategorię" }, class: "w-full border rounded px-3 py-2" %>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :cover_image, "Zdjęcie okładkowe (główne)", class: "block font-medium" %>
+      <%= form.file_field :cover_image, class: "w-full border rounded px-3 py-2" %>
+      <% if @product.cover_image.attached? %>
+        <div class="mt-2">
+          <%= image_tag @product.cover_image, class: "h-20 w-auto" %>
+          <p class="text-xs text-gray-500">Aktualna okładka</p>
+        </div>
+      <% end %>
+    </div>
+
+  <% end %>
+</div>

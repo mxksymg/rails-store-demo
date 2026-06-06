@@ -1,0 +1,36 @@
+<div class="max-w-7xl mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-6">Lista użytkowników</h1>
+
+  <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Imię i nazwisko</th>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ulica</th>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Miasto</th>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kod pocztowy</th>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Telefon</th>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Admin</th>
+          <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rejestracja</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <% @users.each do |user| %>
+          <tr class="hover:bg-gray-50">
+            <td class="px-4 py-3"><%= user.id %></td>
+            <td class="px-4 py-3"><%= "#{user.first_name} #{user.last_name}" %></td>
+            <td class="px-4 py-3"><%= user.email %></td>
+            <td class="px-4 py-3"><%= user.street %></td>
+            <td class="px-4 py-3"><%= user.city %></td>
+            <td class="px-4 py-3"><%= user.postal_code %></td>
+            <td class="px-4 py-3"><%= user.phone %></td>
+            <td class="px-4 py-3"><%= user.admin? ? "✅ Tak" : "❌ Nie" %></td>
+            <td class="px-4 py-3"><%= user.created_at.strftime("%d.%m.%Y %H:%M") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

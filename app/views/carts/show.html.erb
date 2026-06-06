@@ -1,0 +1,53 @@
+<div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+  <h1 class="text-2xl font-bold mb-4 text-gray-800">🛒 Twój koszyk</h1>
+
+  <% if user_signed_in? && (current_user.address.blank? || current_user.phone.blank?) %>
+    <div class="bg-yellow-100 border-l-4 border-yellow-500 p-3 mb-4">
+      Aby złożyć zamówienie, uzupełnij najpierw dane dostawy w <%= link_to "profilu", edit_profile_path, class: "font-bold underline" %>.
+    </div>
+  <% end %>
+
+  <% if @cart.cart_items.any? %>
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border rounded-lg">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="py-3 px-4 border-b text-left">Produkt</th>
+            <th class="py-3 px-4 border-b text-left">Cena</th>
+            <th class="py-3 px-4 border-b text-left">Ilość</th>
+            <th class="py-3 px-4 border-b text-left">Razem</th>
+            <th class="py-3 px-4 border-b"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @cart.cart_items.each do |item| %>
+            <tr class="hover:bg-gray-50">
+              <td class="py-3 px-4 border-b"><%= link_to item.product.name, product_path(item.product), class: "text-indigo-600 hover:underline" %></td>
+              <td class="py-3 px-4 border-b"><%= number_to_currency(item.product.price) %></td>
+              <td class="py-3 px-4 border-b"><%= item.quantity %></td>
+              <td class="py-3 px-4 border-b font-semibold"><%= number_to_currency(item.quantity * item.product.price) %></td>
+              <td class="py-3 px-4 border-b">
+                <%= button_to "Usuń", remove_cart_path(item.product_id), method: :delete, data: { confirm: "Na pewno usunąć?" }, class: "text-red-600 hover:text-red-800 text-sm" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mt-6 border-t pt-4 flex flex-col items-end">
+      <p class="text-xl font-bold text-gray-800">Razem: <%= number_to_currency(@cart.total_price) %></p>
+      <div class="mt-4 flex gap-4">
+        <%= link_to "← Kontynuuj zakupy", products_path, class: "bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded transition" %>
+        <%= form_with url: orders_path, method: :post, class: "inline" do %>
+          <%= submit_tag "✅ Zamawiam i płacę (demo BLIK)", class: "bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded cursor-pointer transition" %>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <div class="text-center py-8">
+      <p class="text-gray-600 mb-4">🛍️ Twój koszyk jest pusty.</p>
+      <%= link_to "Idź do produktów", products_path, class: "bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition" %>
+    </div>
+  <% end %>
+</div>

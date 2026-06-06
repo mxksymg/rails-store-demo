@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Bagsy" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Bagsy">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= yield :head %>
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-gray-100">
+    <nav class="bg-white shadow-lg px-4 py-2 flex justify-between items-center flex-wrap gap-2">
+  <!-- LEWA STRONA: logo + nazwa -->
+  <div class="flex items-center gap-1">
+    <%= image_tag "logo.jpg", class: "h-12 w-auto", alt: "Logo" %>
+    <%= link_to "Bagsy", root_path, class: "text-xl font-bold" %>
+  </div>
+
+  <!-- PRAWA STRONA: linki -->
+  <div class="flex items-center flex-wrap gap-5">
+    <%= link_to "Produkty", products_path, class: "hover:text-indigo-600 transition" %>
+
+    <% if user_signed_in? %>
+      <% if current_user.admin? %>
+        <%= link_to "👥 Użytkownicy", admin_users_path, class: "ml-4 hover:text-indigo-600" %>
+        <%= link_to "📦 Zarządzaj zamówieniami", admin_orders_path, class: "ml-4 hover:text-indigo-600" %>
+        <%= link_to "➕ Dodaj produkt", new_product_path, class: "text-green-600 font-semibold hover:text-green-800" %>
+      <% else %>
+        <%= link_to "🛒 Koszyk (#{current_user.cart&.cart_items&.sum(:quantity) || 0})", cart_path, class: "hover:text-indigo-600" %>
+        <%= link_to "📦 Moje zamówienia", orders_path, class: "hover:text-indigo-600" %>
+        <%= link_to "❤️ Moje polubione", dashboard_path, class: "hover:text-indigo-600" %>
+      <% end %>
+
+      <!-- Separator (opcjonalny) -->
+      <span class="border-l border-gray-300 h-6"></span>
+
+      <span class="text-gray-500 text-sm"><%= current_user.email %></span>
+      <%= link_to "👤 Mój profil", edit_profile_path, class: "hover:text-indigo-600" %>
+      <%= link_to destroy_user_session_path, data: { turbo_method: :delete }, class: "flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-1.5 px-3 rounded-full transition shadow-sm" do %>
+        <span>🚪</span> Wyloguj
+      <% end %>
+    <% else %>
+      <%= link_to "Zaloguj", new_user_session_path, class: "hover:text-indigo-600" %>
+      <%= link_to "Zarejestruj", new_user_registration_path, class: "hover:text-indigo-600" %>
+    <% end %>
+  </div>
+</nav>
+
+    <div class="container mx-auto px-4 py-8">
+      <% if notice %><div class="bg-green-100 text-green-700 p-2 rounded mb-4"><%= notice %></div><% end %>
+      <% if alert %><div class="bg-red-100 text-red-700 p-2 rounded mb-4"><%= alert %></div><% end %>
+      <%= yield %>
+    </div>
+  </body>
+</html>
