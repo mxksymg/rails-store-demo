@@ -12,7 +12,7 @@
 </style>
 
 <div class="flex flex-row w-full" style="min-height: calc(100vh - 60px);">
-  <!-- PASEK BOCZNY – PRZYLEGA DO LEWEJ KRAWĘDZI -->
+  <!-- boczny pasek -->
   <aside class="w-64 bg-white shadow-lg p-5 flex-shrink-0" style="height: auto;">
     <h3 class="font-semibold text-lg mb-4 text-gray-800 border-b pb-2">Kategorie</h3>
     <%= form_with url: products_path, method: :get, local: true, class: "space-y-3" do |form| %>
@@ -29,7 +29,7 @@
     <% end %>
   </aside>
 
-  <!-- LISTA PRODUKTÓW – ZAJMUJE RESZTĘ MIEJSCA -->
+  <!-- główny pasek -->
   <div class="flex-1 p-6">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       <% @products.each do |product| %>

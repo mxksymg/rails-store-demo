@@ -6,6 +6,15 @@ class ProductsController < ApplicationController
     if params[:categories].present?
       @products = @products.where(category: params[:categories].keys)
     end
+
+    # search bar, in app/views/products/index.html.erb :query is name of a text-field(seach bar)
+    if params[:query].present?
+      @products = @products.where(
+        "name LIKE ? OR description LIKE ?",
+        "%#{params[:query]}%",
+        "%#{params[:query]}%"
+      )
+    end
   end
 
   def show

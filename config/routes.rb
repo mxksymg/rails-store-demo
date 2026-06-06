@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get "reviews/create"
+  get "reviews/update"
+  get "reviews/destroy"
   get "product_images/create"
   get "product_images/destroy"
   get "profiles/edit"
@@ -17,8 +20,10 @@ Rails.application.routes.draw do
   resource :profile, only: [ :edit, :update ]
 
   resources :products do
-    resource :favorite, only: [ :create, :destroy ]  # to wystarczy
+    resource :favorite, only: [ :create, :destroy ]
     resources :images, only: [ :create, :destroy ], controller: "product_images"
+    resources :reviews, only: [ :create, :update, :destroy ]
+    resources :reviews, except: [ :index, :show ]
   end
 
   resource :cart, only: [ :show, :destroy ] do

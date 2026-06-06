@@ -5,4 +5,5 @@ class Product < ApplicationRecord
   has_many :order_items, dependent: :destroy  # dodaj
   has_many_attached :images
   has_one_attached :cover_image
+  has_many :reviews, dependent: :destroy
 end

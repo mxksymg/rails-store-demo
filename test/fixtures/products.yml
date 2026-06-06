@@ -1,3 +1,6 @@
 one:
-  name: Test product
-  price: 100
+  name: "Testowy produkt"
+  price: 10.00
+  published: true
+  description: "Opis testowy"
+  category: "torby"

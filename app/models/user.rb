@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :favorite_products, through: :favorites, source: :product
   has_one :cart, dependent: :destroy
   has_many :orders, dependent: :destroy
+  has_many :reviews, dependent: :destroy
 
   after_create :create_user_cart
   after_initialize :set_default_admin, if: :new_record?

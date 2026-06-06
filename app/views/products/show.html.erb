@@ -14,23 +14,98 @@
     <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">Brak zdjęcia</div>
   <% end %>
 </div>
+
 <div class="max-w-2xl mx-auto px-4 py-8">
   <h1 class="text-3xl font-bold"><%= @product.name %></h1>
   <p class="text-gray-600 mt-2"><%= @product.description %></p>
   <p class="text-2xl font-bold text-indigo-600 mt-4"><%= number_to_currency(@product.price) %></p>
-<% if user_signed_in? %>
-  <% unless current_user.admin? %>
-    <div class="mt-6">
-      <% if current_user.favorite_products.include?(@product) %>
-        <%= button_to "Usuń z polubionych", product_favorite_path(@product), method: :delete, class: "bg-red-500 text-white px-4 py-2 rounded mt-2" %>
-      <% else %>
-        <%= button_to "Polub", product_favorite_path(@product), method: :post, class: "bg-green-500 text-white px-4 py-2 rounded mt-2" %>
-      <% end %>
-      <%= button_to "Dodaj do koszyka", add_cart_path(@product.id), method: :post, class: "bg-indigo-600 text-white px-4 py-2 rounded ml-2" %>
-    </div>
+
+  <% if user_signed_in? %>
+    <% unless current_user.admin? %>
+      <div class="mt-6">
+        <% if current_user.favorite_products.include?(@product) %>
+          <%= button_to "Usuń z polubionych", product_favorite_path(@product), method: :delete, class: "bg-red-500 text-white px-4 py-2 rounded mt-2" %>
+        <% else %>
+          <%= button_to "Polub", product_favorite_path(@product), method: :post, class: "bg-green-500 text-white px-4 py-2 rounded mt-2" %>
+        <% end %>
+        <%= button_to "Dodaj do koszyka", add_cart_path(@product.id), method: :post, class: "bg-indigo-600 text-white px-4 py-2 rounded ml-2" %>
+      </div>
+    <% end %>
+  <% else %>
+    <p><%= link_to "Zaloguj się", new_user_session_path %> aby móc polubić lub kupić produkt.</p>
   <% end %>
-<% else %>
-  <p><%= link_to "Zaloguj się", new_user_session_path %> aby móc polubić lub kupić produkt.</p>
-<% end %>
-<%= link_to "Powrót do listy", products_path, class: "mt-8 inline-block text-indigo-600 hover:underline" %>
+
+  <!-- SEKCJA OCEN I RECENZJI -->
+  <div class="mt-10 border-t pt-6">
+    <h2 class="text-2xl font-bold mb-4">Oceny i recenzje</h2>
+
+    <!-- średnia i podsumowanie -->
+    <div class="flex items-center gap-4 mb-6">
+      <div class="text-4xl font-bold text-indigo-600">
+        <%= @product.reviews.average(:rating).to_f.round(1) %>
+      </div>
+      <div class="text-gray-600">
+        na podstawie <%= @product.reviews.count %> <%= 'opinii'.pluralize(@product.reviews.count) %>
+      </div>
+    </div>
+
+    <!-- lista recenzji -->
+    <div class="space-y-4">
+      <% @product.reviews.order(created_at: :desc).each do |review| %>
+        <div class="border rounded-lg p-4 bg-white">
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-semibold"><%= review.user.email %></span>
+                <span class="text-yellow-500">★ <%= review.rating %></span>
+              </div>
+              <p class="text-gray-600 text-sm"><%= review.created_at.strftime("%d.%m.%Y") %></p>
+            </div>
+            <% if policy(review).update? || policy(review).destroy? %>
+              <div class="flex gap-2">          
+                <%= button_to "Usuń", product_review_path(@product, review), method: :delete, data: { turbo_confirm: "Usunąć recenzję?" }, class: "text-red-600 text-sm" if policy(review).destroy? %>
+              </div>
+            <% end %>
+          </div>
+          <p class="mt-2"><%= review.comment %></p>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- adding/editing reviews-->
+    <% if user_signed_in? && !current_user.admin? %>
+      <% existing_review = @product.reviews.find_by(user: current_user) %>
+      <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+        <h3 class="font-semibold mb-2"><%= existing_review ? "Twoja recenzja" : "Dodaj swoją opinię" %></h3>
+        <%= form_with model: [@product, existing_review || @product.reviews.build], local: true, data: { turbo: false }, class: "space-y-3" do |f| %>
+           <!--using "star-type" review -->
+          <div class="mb-2">
+            <span class="block text-sm font-medium mb-1">Twoja ocena:</span>
+            <div class="star-rating">
+              <%= f.radio_button :rating, 5, id: "star5" %>
+              <%= f.label :rating, "★", value: 5, for: "star5" %>
+              <%= f.radio_button :rating, 4, id: "star4" %>
+              <%= f.label :rating, "★", value: 4, for: "star4" %>
+              <%= f.radio_button :rating, 3, id: "star3" %>
+              <%= f.label :rating, "★", value: 3, for: "star3" %>
+              <%= f.radio_button :rating, 2, id: "star2" %>
+              <%= f.label :rating, "★", value: 2, for: "star2" %>
+              <%= f.radio_button :rating, 1, id: "star1" %>
+              <%= f.label :rating, "★", value: 1, for: "star1" %>
+            </div>
+          </div>
+
+          <div>
+            <%= f.label :comment, "Twoja opinia", class: "block text-sm font-medium" %>
+            <%= f.text_area :comment, rows: 3, class: "w-full border rounded px-3 py-2", placeholder: "Podziel się wrażeniami...", value: existing_review&.comment %>
+          </div>
+          <%= f.submit existing_review ? "Zaktualizuj opinię" : "Dodaj opinię", class: "bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" %>
+        <% end %>
+      </div>
+    <% elsif !user_signed_in? %>
+      <p class="mt-6 text-gray-500">Zaloguj się, aby dodać opinię.</p>
+    <% end %>
+  </div>
+
+  <%= link_to "Powrót do listy", products_path, class: "mt-8 inline-block text-indigo-600 hover:underline" %>
 </div>

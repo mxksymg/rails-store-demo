@@ -18,15 +18,25 @@
 
   <body class="bg-gray-100">
     <nav class="bg-white shadow-lg px-4 py-2 flex justify-between items-center flex-wrap gap-2">
-  <!-- LEWA STRONA: logo + nazwa -->
+  <!-- navbar left side, logo + name -->
   <div class="flex items-center gap-1">
     <%= image_tag "logo.jpg", class: "h-12 w-auto", alt: "Logo" %>
     <%= link_to "Bagsy", root_path, class: "text-xl font-bold" %>
   </div>
 
-  <!-- PRAWA STRONA: linki -->
+  <!-- navbar right side, links -->
   <div class="flex items-center flex-wrap gap-5">
     <%= link_to "Produkty", products_path, class: "hover:text-indigo-600 transition" %>
+    <!-- seach bar -->
+    <%= form_with url: products_path, method: :get, local: true, class: "flex gap-1 items-center" do |f| %>
+      <%= text_field_tag :query, params[:query], placeholder: "Szukaj produktu...", class: "border rounded-full px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-40 sm:w-60" %>
+      <%= submit_tag "🔍", class: "bg-gray-100 hover:bg-gray-200 rounded-full px-3 py-1 text-sm" %>
+    <% end %>
+    <span class="border-l border-gray-300 h-6"></span>
+
+
+
+
 
     <% if user_signed_in? %>
       <% if current_user.admin? %>
@@ -39,7 +49,6 @@
         <%= link_to "❤️ Moje polubione", dashboard_path, class: "hover:text-indigo-600" %>
       <% end %>
 
-      <!-- Separator (opcjonalny) -->
       <span class="border-l border-gray-300 h-6"></span>
 
       <span class="text-gray-500 text-sm"><%= current_user.email %></span>
