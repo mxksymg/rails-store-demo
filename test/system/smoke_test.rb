@@ -3,6 +3,6 @@ require "application_system_test_case"
 class SmokeTest < ApplicationSystemTestCase
   test "home page loads" do
     visit root_path
-    assert_text "Bagsy"
+    assert_text "Produkty"
   end
 end
