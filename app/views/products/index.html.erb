@@ -12,7 +12,9 @@
 </style>
 
 <div class="flex flex-row w-full" style="min-height: calc(100vh - 60px);">
-  <!-- boczny pasek -->
+
+
+  <!-- left div -->
   <aside class="w-64 bg-white shadow-lg p-5 flex-shrink-0" style="height: auto;">
     <h3 class="font-semibold text-lg mb-4 text-gray-800 border-b pb-2">Kategorie</h3>
     <%= form_with url: products_path, method: :get, local: true, class: "space-y-3" do |form| %>
@@ -22,6 +24,20 @@
           <span class="text-gray-700 capitalize"><%= cat %></span>
         </label>
       <% end %>
+
+      <!--price sorting (lowest to highest / highest to lowest)-->
+      <div class="mt-4 border-t pt-4">
+        <h4 class="font-semibold text-gray-800 mb-2">Cena</h4>
+
+        <!--price range filtering (from/to)-->
+        <div class="flex gap-2 items-center">
+          <%= number_field_tag :min_price, params[:min_price], placeholder: "Od", class: "w-full border rounded px-2 py-1 text-sm" %>
+          <span class="text-gray-500">–</span>
+          <%= number_field_tag :max_price, params[:max_price], placeholder: "Do", class: "w-full border rounded px-2 py-1 text-sm" %>
+        </div>
+      </div> 
+
+
       <div class="pt-4 flex gap-3">
         <%= form.submit "Filtruj", class: "flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition cursor-pointer" %>
         <%= link_to "Resetuj", products_path, class: "flex-1 text-center bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition" %>
@@ -29,8 +45,16 @@
     <% end %>
   </aside>
 
-  <!-- główny pasek -->
+  <!-- main div -->
+
   <div class="flex-1 p-6">
+
+  <!--price sorting (lowest to highest / highest to lowest)-->
+  <div class="flex justify-start gap-3 mb-4">
+    <%= link_to "Najtańsze", products_path(sort: 'price_asc', **params.permit(:query, :min_price, :max_price, categories: {})), class: "bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium px-4 py-2 rounded-full transition duration-200 transform hover:scale-105" %>
+    <%= link_to "Najdroższe", products_path(sort: 'price_desc', **params.permit(:query, :min_price, :max_price, categories: {})), class: "bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium px-4 py-2 rounded-full transition duration-200 transform hover:scale-105" %>
+  </div>
+
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       <% @products.each do |product| %>
         <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition overflow-hidden flex flex-col">

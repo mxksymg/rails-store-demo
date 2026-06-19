@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Bagsy" %></title>
+    <title><%= content_for(:title) || "online shop" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Bagsy">
+    <meta name="application-name" content="online shop">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -21,7 +21,7 @@
   <!-- navbar left side, logo + name -->
   <div class="flex items-center gap-1">
     <%= image_tag "logo.jpg", class: "h-12 w-auto", alt: "Logo" %>
-    <%= link_to "Bagsy", root_path, class: "text-xl font-bold" %>
+    <%= link_to "online shop", root_path, class: "text-xl font-bold" %>
   </div>
 
   <!-- navbar right side, links -->
