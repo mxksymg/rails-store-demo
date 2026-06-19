@@ -4,9 +4,17 @@ class ReviewsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   setup do
-    @user = User.create!(email: "user@example.com", password: "password")
-    @admin = User.create!(email: "admin@example.com", password: "password", admin: true)
-    @product = Product.create!(name: "Test", price: 10, published: true)
+    @user = User.find_or_create_by!(email: "user@example.com") do |u|
+      u.password = "password"
+    end
+    @admin = User.find_or_create_by!(email: "admin@example.com") do |u|
+      u.password = "password"
+      u.admin = true
+    end
+    @product = Product.find_or_create_by!(name: "Test") do |p|
+      p.price = 10
+      p.published = true
+    end
     sign_in @user
   end
 
