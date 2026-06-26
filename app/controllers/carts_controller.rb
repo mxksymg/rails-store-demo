@@ -9,7 +9,7 @@ class CartsController < ApplicationController
     # current_user.cart || current_user.create_cart ensures cart is always available
     @cart = current_user.cart || current_user.create_cart
     # Load all cart items with associated products
-    # In SQL procceded this two querys : SELECT * FROM cart_items WHERE cart_id = 1 
+    # In SQL procceded this two querys : SELECT * FROM cart_items WHERE cart_id = 1
     # SELECT * FROM products WHERE id IN (...) - loads all products in one query (avoids N+1 problem)
     @cart_items = @cart.cart_items.includes(:product)
   end
