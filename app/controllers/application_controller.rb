@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
   private
   # Handle "record not found" (404)
   def record_not_found
-    #sets flash message and redirects to products list
+    # sets flash message and redirects to products list
     flash[:alert] = "Produkt nie istnieje."
     redirect_to products_path
   end
